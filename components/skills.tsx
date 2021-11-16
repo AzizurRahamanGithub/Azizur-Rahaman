@@ -1,0 +1,620 @@
+"use client"
+
+import { useState, useEffect, useRef } from "react"
+import { Badge } from "@/components/ui/badge"
+import Head from "next/head"
+import { motion, AnimatePresence } from "framer-motion"
+import { SiReact, SiDjango, SiPostgresql, SiNextdotjs , SiMongodb, SiDocker, SiGit,  SiFastapi, SiHostinger, SiCelery,   } from 'react-icons/si';
+import { FaDigitalOcean, FaGithubSquare  } from "react-icons/fa";
+import { DiRedis } from "react-icons/di";
+import { TbBrandCpp } from "react-icons/tb";
+import { RiJavaLine, RiGeminiFill  } from "react-icons/ri";
+import { FaAws, FaJsSquare, FaBootstrap, FaPython, FaLinux    } from "react-icons/fa";
+import { VscVscode } from "react-icons/vsc";
+import { BiLogoTypescript, BiLogoPostgresql  } from "react-icons/bi";
+import { TbBrandReact } from "react-icons/tb";
+import { RiTailwindCssFill } from "react-icons/ri";
+import { SiSqlite } from "react-icons/si";
+import { TbSql } from "react-icons/tb";
+
+interface Skill {
+  id: number
+  name: string
+  category: string
+  icon: JSX.Element
+  description: string
+  officialDoc: string
+  proficiency?: "Beginner" | "Intermediate" | "Advanced" | "Expert"
+}
+
+export function Skills() {
+  const [skills, setSkills] = useState<Skill[]>([])
+  const [loading, setLoading] = useState(true)
+  const [hoveredSkill, setHoveredSkill] = useState<number | null>(null)
+  const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 })
+  const tooltipRef = useRef<HTMLDivElement>(null)
+  const skillRefs = useRef<Map<number, HTMLDivElement>>(new Map())
+
+  // Category-wise color configuration
+ const categoryConfig: Record<string, {
+    label: string;
+    iconColor: string;
+    iconClass: string;
+    bgHover: string;
+    borderHover: string;
+  }> = {
+    frontend: {
+      label: "Frontend Development",
+      iconColor: "text-blue-400",
+      iconClass: "fas fa-desktop",
+      bgHover: "hover:bg-blue-500/10",
+      borderHover: "hover:border-blue-500/30"
+    },
+    backend: {
+      label: "Backend Development",
+      iconColor: "text-green-400",
+      iconClass: "fas fa-server",
+      bgHover: "hover:bg-green-500/10",
+      borderHover: "hover:border-green-500/30"
+    },
+    database: {
+      label: "Database & Storage",
+      iconColor: "text-purple-400",
+      iconClass: "fas fa-database",
+      bgHover: "hover:bg-purple-500/10",
+      borderHover: "hover:border-purple-500/30"
+    },
+    cloud: {
+      label: "Cloud & Deployment",
+      iconColor: "text-cyan-400",
+      iconClass: "fas fa-cloud",
+      bgHover: "hover:bg-cyan-500/10",
+      borderHover: "hover:border-cyan-500/30"
+    },
+    tools: {
+      label: "Tools & Software",
+      iconColor: "text-yellow-400",
+      iconClass: "fas fa-tools",
+      bgHover: "hover:bg-yellow-500/10",
+      borderHover: "hover:border-yellow-500/30"
+    },
+    "app-development": {
+      label: "Mobile Development",
+      iconColor: "text-pink-400",
+      iconClass: "fas fa-mobile-alt",
+      bgHover: "hover:bg-pink-500/10",
+      borderHover: "hover:border-pink-500/30"
+    },
+    other: {
+      label: "Other Skills",
+      iconColor: "text-gray-400",
+      iconClass: "fas fa-star",
+      bgHover: "hover:bg-gray-500/10",
+      borderHover: "hover:border-gray-500/30"
+    }
+  }
+
+  useEffect(() => {
+    const fetchSkills = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/api/skills/")
+        if (!response.ok) throw new Error("Failed to fetch")
+        const data = await response.json()
+        const skillsList = Array.isArray(data) ? data : data.results || []
+        setSkills(skillsList)
+      } catch (error) {
+        console.log("BackEnd Error fetching skills, using fallback:", error)
+        setSkills([
+          { 
+            id: 1, 
+            name: "React", 
+            category: "frontend", 
+            icon: <TbBrandReact className="" />,
+            description: "Modern React with Hooks, Context API, and performance optimization. Built 10+ production applications.",
+            officialDoc: "https://react.dev",
+            proficiency: "Intermediate"
+          },
+          { 
+            id: 2, 
+            name: "Next.js", 
+            category: "frontend", 
+            icon: <SiNextdotjs className="" />,
+            description: "Full-stack React framework with SSR, SSG, and API routes. SEO optimized applications.",
+            officialDoc: "https://nextjs.org",
+            proficiency: "Intermediate"
+          },
+          { 
+            id: 3, 
+            name: "TypeScript", 
+            category: "frontend", 
+            icon: <BiLogoTypescript className="text-[40px]" />, 
+            description: "Type-safe JavaScript for scalable applications. Strong typing and better developer experience.", 
+            officialDoc: "https://www.typescriptlang.org", 
+            proficiency: "Intermediate" 
+          }, 
+          { 
+            id: 4, 
+            name: "JavaScript", 
+            category: "frontend", 
+            icon: <FaJsSquare className="" />, 
+            description: "Type-safe JavaScript for scalable applications. Strong typing and better developer experience.", 
+            officialDoc: "https://www.typescriptlang.org", 
+            proficiency: "Advanced" 
+          }, 
+          { 
+            id: 5, 
+            name: "Bootstrap", 
+            category: "frontend", 
+            icon: <FaBootstrap className="" />, 
+            description: "CSS framework for rapid UI development. Responsive design and dark mode support.", 
+            officialDoc: "https://getbootstrap.com/", 
+            proficiency: "Advanced" 
+          }, 
+          { 
+            id: 6, 
+            name: "Tailwind CSS", 
+            category: "frontend", 
+            icon: <RiTailwindCssFill className="" />, 
+            description: "Utility-first CSS framework for rapid UI development. Responsive design and dark mode support.", 
+            officialDoc: "https://tailwindcss.com", 
+            proficiency: "Expert" 
+          },
+                    { 
+            id: 7, 
+            name: "Python", 
+            category: "backend", 
+            icon: <FaPython  className="" />,
+            description: "High-level Programming language.",
+            officialDoc: "https://www.djangoproject.com",
+            proficiency: "Intermediate"
+          },
+          { 
+            id: 8, 
+            name: "Django", 
+            category: "backend", 
+            icon: <SiDjango className="" />,
+            description: "High-level Python web framework. MVC architecture, ORM, and built-in admin panel.",
+            officialDoc: "https://www.djangoproject.com",
+            proficiency: "Expert"
+          },
+          { 
+            id: 9, 
+            name: "FastAPI", 
+            category: "backend", 
+            icon: <SiFastapi className="" />,
+            description: "High-level Python web framework. MVC architecture, ORM, and built-in admin panel.",
+            officialDoc: "https://fastapi.tiangolo.com/",
+            proficiency: "Intermediate"
+          },
+          { 
+            id: 10, 
+            name: "CPP", 
+            category: "backend", 
+            icon: <TbBrandCpp className="" />,
+            description: "High-level Python web framework. MVC architecture, ORM, and built-in admin panel.",
+            officialDoc: "",
+            proficiency: "Beginner"
+          },
+          { 
+            id: 11, 
+            name: "Java", 
+            category: "backend", 
+            icon: <RiJavaLine className="" />,
+            description: "High-level Python web framework. MVC architecture, ORM, and built-in admin panel.",
+            officialDoc: "",
+            proficiency: "Beginner"
+          },
+          { 
+            id: 8, 
+            name: "PostgreSQL", 
+            category: "database", 
+            icon: <BiLogoPostgresql  className="" />,
+            description: "Advanced open-source relational database. Complex queries, transactions, and data integrity.",
+            officialDoc: "https://www.postgresql.org",
+            proficiency: "Advanced"
+          },
+          { 
+            id: 9, 
+            name: "Sqlite", 
+            category: "database", 
+            icon: <SiSqlite  className="" />,
+            description: "NoSQL document database for flexible data models. Aggregation pipeline and indexing.",
+            officialDoc: "https://www.mongodb.com",
+            proficiency: "Intermediate"
+          },
+          { 
+            id: 9, 
+            name: "SQL", 
+            category: "database", 
+            icon: <TbSql   className="" />,
+            description: "NoSQL document database for flexible data models. Aggregation pipeline and indexing.",
+            officialDoc: "https://www.mongodb.com",
+            proficiency: "Intermediate"
+          },
+          { 
+            id: 10, 
+            name: "AWS", 
+            category: "cloud", 
+            icon: <FaAws className="" />,
+            description: "Cloud computing services. EC2, S3, Lambda, and cloud infrastructure management.",
+            officialDoc: "https://aws.amazon.com",
+            proficiency: "Intermediate"
+          },
+          { 
+            id: 11, 
+            name: "DigitalOcean", 
+            category: "cloud", 
+            icon: <FaDigitalOcean className="" />,
+            description: "Containerization platform for consistent development and deployment environments.",
+            officialDoc: "",
+            proficiency: "Intermediate"
+          },
+          { 
+            id: 12, 
+            name: "Hostinger", 
+            category: "cloud", 
+            icon: <SiDocker className="" />,
+            description: "Containerization platform for consistent development and deployment environments.",
+            officialDoc: "https://www.docker.com",
+            proficiency: "Expert"
+          },
+          { 
+            id: 13, 
+            name: "Github", 
+            category: "cloud", 
+            icon: <FaGithubSquare  className="" />,
+            description: "Version control",
+            officialDoc: "",
+            proficiency: "Expert"
+          },
+          { 
+            id: 14, 
+            name: "Git", 
+            category: "tools", 
+            icon: <SiGit className="" />,
+            description: "Version control system. Branch management, collaboration, and CI/CD integration.",
+            officialDoc: "https://git-scm.com",
+            proficiency: "Expert"
+          },
+          { 
+            id: 15, 
+            name: "Celery", 
+            category: "tools", 
+            icon: <SiCelery className="" />,
+            description: "Celery task shedule",
+            officialDoc: "",
+            proficiency: "Intermediate"
+          },
+          { 
+            id: 16, 
+            name: "Redis", 
+            category: "tools", 
+            icon: <DiRedis className="" />,
+            description: "Task provider",
+            officialDoc: "",
+            proficiency: "Intermediate"
+          },
+          { 
+            id: 17, 
+            name: "AI/ML", 
+            category: "tools", 
+            icon: <RiGeminiFill className="" />,
+            description: "AI api integration",
+            officialDoc: "",
+            proficiency: "Beginner"
+          },
+          { 
+            id: 18, 
+            name: "Linux", 
+            category: "tools", 
+            icon: <FaLinux  className="" />,
+            description: "Version control system. Branch management, collaboration, and CI/CD integration.",
+            officialDoc: "https://git-scm.com",
+            proficiency: "Expert"
+          },
+          { 
+            id: 19, 
+            name: "VS Code", 
+            category: "tools", 
+            icon: <VscVscode className="" />,
+            description: "Code editor with extensive extensions, debugging, and integrated terminal.",
+            officialDoc: "https://code.visualstudio.com",
+            proficiency: "Expert"
+          }
+        ])
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchSkills()
+  }, [])
+
+  const handleMouseEnter = (skillId: number) => {
+    setHoveredSkill(skillId)
+    
+    setTimeout(() => {
+      const skillElement = skillRefs.current.get(skillId)
+      if (skillElement) {
+        const rect = skillElement.getBoundingClientRect()
+        setTooltipPos({ 
+          x: rect.left + rect.width / 2, 
+          y: rect.bottom + window.scrollY + 10 
+        })
+      }
+    }, 10)
+  }
+
+  const handleMouseMove = (e: React.MouseEvent, skillId: number) => {
+    if (hoveredSkill === skillId) {
+      setTooltipPos({ 
+        x: e.clientX, 
+        y: e.clientY + 20 
+      })
+    }
+  }
+
+  const groupedSkills = skills.reduce((acc, skill) => {
+    const category = skill.category || "other"
+    if (!acc[category]) acc[category] = []
+    acc[category].push(skill)
+    return acc
+  }, {} as Record<string, Skill[]>)
+
+  const proficiencyColors: Record<string, string> = {
+    Beginner: "bg-gray-500",
+    Intermediate: "bg-blue-500", 
+    Advanced: "bg-green-500",
+    Expert: "bg-purple-500"
+  }
+
+  const hoveredSkillData = skills.find(s => s.id === hoveredSkill)
+
+  if (loading) {
+    return (
+      <section id="skills" className="py-20 md:py-32 px-4 md:px-8">
+        <div className="max-w-6xl mx-auto">
+          <div className="h-32 bg-card rounded-lg animate-pulse" />
+        </div>
+      </section>
+    )
+  }
+
+  return (
+    <>
+      <Head>
+        <title>Technical Skills & Expertise | Azizur Rahaman - Full Stack Developer</title>
+        <meta 
+          name="description" 
+          content="Comprehensive technical skills of Azizur Rahaman including React, Next.js, Node.js, TypeScript, PostgreSQL, MongoDB, AWS with detailed descriptions and proficiency levels." 
+        />
+        <meta 
+          name="keywords" 
+          content="Azizur Rahaman skills, React expert, Next.js developer, Node.js developer, TypeScript, MongoDB, PostgreSQL, AWS, Full Stack Developer Bangladesh, web development skills"
+        />
+        
+        <link rel="canonical" href="https://azizur-rahaman.vercel.app/skills" />
+        
+        <meta property="og:title" content="Technical Skills & Expertise | Azizur Rahaman" />
+        <meta property="og:description" content="Explore detailed technical skills and proficiency levels of Azizur Rahaman in modern web development technologies." />
+        <meta property="og:url" content="https://azizur-rahaman.vercel.app/skills" />
+        <meta property="og:type" content="website" />
+        
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Azizur Rahaman - Technical Skills" />
+        <meta name="twitter:description" content="Full Stack Developer skilled in React, Next.js, Node.js, TypeScript and modern web technologies." />
+
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Person",
+              "name": "Azizur Rahaman",
+              "jobTitle": "Full Stack Developer",
+              "description": "Skilled Full Stack Developer specializing in modern web technologies",
+              "url": "https://azizur-rahaman.vercel.app",
+              "sameAs": [
+                "https://github.com/AzizurRahamanGithub",
+                "https://www.linkedin.com/in/programmer-azizur-rahaman",
+                "https://www.instagram.com/_azizur_rahaman_/",
+                "https://codeforces.com/profile/Azizur_Rahaman"
+              ],
+              "knowsAbout": skills.map(skill => ({
+                "@type": "Thing",
+                "name": skill.name,
+                "description": skill.description,
+                "url": skill.officialDoc,
+                "skillLevel": skill.proficiency
+              })),
+              "hasOccupation": {
+                "@type": "Occupation", 
+                "name": "Full Stack Developer",
+                "skills": skills.map(skill => skill.name),
+                "description": "Web application development using modern technologies"
+              }
+            }),
+          }}
+        />
+      </Head>
+
+      <link 
+        rel="stylesheet" 
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" 
+        crossOrigin="anonymous"
+      />
+
+      <section id="skills" className="py-20 md:py-32 px-4 md:px-8 bg-transparent">
+        <div className="max-w-7xl mx-auto">
+          
+          <div className="text-center mb-16">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white">
+              Technical Skills & Expertise
+            </h1>
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+              Detailed overview of my technical proficiency across modern web development technologies and tools
+            </p>
+            
+            <div className="flex justify-center gap-6 mt-8 flex-wrap">
+              {["Beginner", "Intermediate", "Advanced", "Expert"].map((level) => (
+                <div key={level} className="flex items-center gap-2">
+                  <div className={`w-3 h-3 rounded-full ${proficiencyColors[level]}`}></div>
+                  <span className="text-sm text-gray-400">{level}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {Object.entries(groupedSkills).map(([category, categorySkills]) => {
+              const config = categoryConfig[category] || categoryConfig.other
+              
+              return (
+                <div key={category} className="glass-border rounded-2xl p-8 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300">
+                  <h3 className={`text-2xl font-bold mb-6 flex items-center gap-3 ${config.iconColor}`}>
+                    <i className={`${config.iconClass} ${config.iconColor}`}></i>
+                    {config.label}
+                  </h3>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                    {categorySkills.map((skill) => (
+                      <div 
+                        key={skill.id}
+                        ref={(el) => {
+                          if (el) {
+                            skillRefs.current.set(skill.id, el)
+                          } else {
+                            skillRefs.current.delete(skill.id)
+                          }
+                        }}
+                        className="relative"
+                      >
+                        <motion.a
+                          href={skill.officialDoc}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block"
+                          onMouseEnter={() => handleMouseEnter(skill.id)}
+                          onMouseMove={(e) => handleMouseMove(e, skill.id)}
+                          onMouseLeave={() => setHoveredSkill(null)}
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          <div className={`bg-white/5 rounded-2xl p-4 border border-white/10 ${config.bgHover} ${config.borderHover} transition-all duration-300 cursor-pointer group h-full flex justify-center items-center`}>
+                            <div className="text-center">
+                              {/* Icon with category color */}
+                              <div className={`text-4xl mb-3 flex justify-center ${config.iconColor}`}>
+                                {skill.icon}
+                              </div>
+                              <h4 className={`text-sm font-semibold ${config.iconColor} group-hover:text-white transition-colors duration-300 mb-2`}>
+                                {skill.name}
+                              </h4>
+
+                              {skill.proficiency && (
+                                <div className="flex items-center justify-center gap-1 mb-2">
+                                  <div className={`w-2 h-2 rounded-full ${proficiencyColors[skill.proficiency]}`}></div>
+                                  <span className="text-xs text-gray-400">{skill.proficiency}</span>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </motion.a>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+
+          {/* Tooltip */}
+          <AnimatePresence>
+            {hoveredSkill !== null && hoveredSkillData && (
+              <motion.div
+                ref={tooltipRef}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.15 }}
+                className="fixed z-50"
+                style={{
+                  left: `${tooltipPos.x}px`,
+                  top: `${tooltipPos.y}px`,
+                  transform: 'translateX(-50%)',
+                }}
+                onMouseEnter={() => setHoveredSkill(hoveredSkill)}
+                onMouseLeave={() => setHoveredSkill(null)}
+              >
+                <div className="bg-gray-900 border border-blue-500/50 rounded-lg p-4 shadow-2xl w-64 backdrop-blur-sm">
+                  <p className="text-sm text-gray-300 leading-relaxed mb-3">
+                    {hoveredSkillData.description}
+                  </p>
+                  <div className="flex items-center justify-between pt-3 border-t border-gray-700">
+                    <span className="text-xs text-blue-400">Click to view official docs</span>
+                    <i className="fas fa-external-link-alt text-blue-400 text-xs"></i>
+                  </div>
+                </div>
+                
+                {/* Arrow */}
+                <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-gray-900 border-l border-t border-blue-500/50 rotate-45"></div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <div className="mt-16">
+            <div className="glass-border rounded-2xl p-8">
+              <h2 className="text-2xl font-bold text-white mb-6 text-center">
+                Continuous Skill Development & Learning Journey
+              </h2>
+              
+              <div className="grid md:grid-cols-2 gap-8">
+                <div>
+                  <h3 className="text-lg font-semibold text-blue-400 mb-4">Development Philosophy</h3>
+                  <p className="text-gray-300 leading-relaxed mb-4">
+                    As a passionate Full Stack Developer, I believe in continuous learning and staying updated with 
+                    the latest technologies and best practices in web development.
+                  </p>
+                  <ul className="text-gray-300 space-y-2">
+                    <li className="flex items-center gap-2">
+                      <i className="fas fa-check text-green-400"></i>
+                      <span>Clean, maintainable code following best practices</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <i className="fas fa-check text-green-400"></i>
+                      <span>Performance optimization and SEO considerations</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <i className="fas fa-check text-green-400"></i>
+                      <span>Responsive design and cross-browser compatibility</span>
+                    </li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h3 className="text-lg font-semibold text-green-400 mb-4">Technical Focus Areas</h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="flex items-center gap-2 text-sm text-gray-300">
+                      <i className="fas fa-rocket text-blue-400"></i>
+                      <span>Performance</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-gray-300">
+                      <i className="fas fa-shield-alt text-green-400"></i>
+                      <span>Security</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-gray-300">
+                      <i className="fas fa-search text-purple-400"></i>
+                      <span>SEO Optimization</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-gray-300">
+                      <i className="fas fa-mobile-alt text-yellow-400"></i>
+                      <span>Responsive Design</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
+  )
+}

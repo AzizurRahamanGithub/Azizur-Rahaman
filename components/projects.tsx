@@ -1,0 +1,462 @@
+"use client"
+
+import { useState } from "react"
+import { Badge } from "@/components/ui/badge"
+import { motion, AnimatePresence } from "framer-motion"
+import Image from "next/image"
+import Link from "next/link"
+import Head from "next/head"
+
+const categories = ["all", "full-stack", "frontend", "backend"] as const
+
+type Category = typeof categories[number]
+
+interface Project {
+  id: number
+  title: string
+  description: string
+  tags_list: string[]
+  category: Category
+  image: string
+  video_link: string
+  github_link?: string
+  live_demo?: string
+  features?: string[]
+}
+
+export function Projects() {
+  const [activeCategory, setActiveCategory] = useState<Category>("all")
+  const [visibleCount, setVisibleCount] = useState(6)
+  const [expandedProject, setExpandedProject] = useState<number | null>(null)
+
+  // Enhanced projects data with Azizur Rahaman's real links
+  const projects: Project[] = [
+    // Full Stack Projects
+    {
+      id: 1,
+      title: "Skill Swaping Solution",
+      description: "Full-stack skill swap solution with user authentication, payment processing, and admin dashboard built by Azizur Rahaman",
+      tags_list: ["Next.js", "django rest framework ", "PostgreSQL", "Stripe", "JWT", "Hostinger"],
+      category: "full-stack",
+      image: "/skill-swaping.png",
+      live_demo: "https://swapnmeet.com/",
+      github_link: "https://github.com/AzizurRahamanGithub/Skill-Swaping-System.git",
+      features: [
+        "User can swap their skill if other skill need",
+        "User authentication & authorization",
+        "Payment integration with Stripe",
+        "Admin dashboard for product management",
+        "Responsive design for all devices"
+      ]
+    },
+    {
+      id: 2,
+      title: "Travel Agency Tour Booking",
+      description: "This is a full-stack booking solution with user authentication, payment processing, and admin dashboard built by Azizur Rahaman",
+      tags_list: ["Next.js", "django rest framework ", "PostgreSQL", "HitPay", "JWT", "Hostinger"],
+      category: "full-stack",
+      image: "/travel-agency.png",
+      live_demo: "https://longvacationtravels.com.sg/",
+      github_link: "https://github.com/AzizurRahamanGithub/travel-agency-v2.git",
+      // live_demo: "https://azizur-rahaman.vercel.app/",
+      features: [
+        "User authentication & authorization",
+        "Payment integration with Stripe",
+        "Admin dashboard for product management",
+        "Shopping cart & order tracking",
+        "Responsive design for all devices"
+      ]
+    },
+    {
+      id: 3,
+      title: "Neuropsychological Assessment Platform",
+      description: "Built full-stack secure web platform for 30+ neuropsychological diagnostic questionnaires with multilingual support. and admin dashboard built by Azizur Rahaman",
+      tags_list: ["Next.js", "Python", "Django", "PostgreSQL", "JWT", "Hostinger"],
+      category: "full-stack",
+      image: "/neuro.png",
+      video_link: "https://drive.google.com/file/d/1iKdmCag9-eB1IA7mcpvw8CTmrE9dwU8j/view",
+      github_link: "https://github.com/AzizurRahamanGithub/Neuropsychological-Assessment-Platform-FrontEnd.git",
+      // live_demo: "https://azizur-rahaman.vercel.app/",
+      features: [
+        "User authentication & authorization",
+        "Admin dashboard for patients management",
+        "Assissment system live link generator",
+        "Responsive design for all devices"
+      ]
+    },
+    {
+      id: 4,
+      title: "Company Ecommerce ERP Management System",
+      description: "Full-stack Architected modular ERP backend with 13 operational modules (Employee, Sales, Delivery, Sanitizer, etc.) supporting 33 distinct user srole-based access control and dynamic permission assignment system. and admin dashboard built by Azizur Rahaman",
+      tags_list: ["React", "Node.js", "MongoDB", "Stripe", "JWT", "Express"],
+      category: "backend",
+      image: "/backend.png",
+      video_link: "https://drive.google.com/file/d/16ZHeEnCtCtW_EIDJitYri5575xiFM2vE/view",
+      github_link: "https://github.com/AzizurRahamanGithub/Company-Ecommerce-ERP-Management-System.git",
+      // live_demo: "https://azizur-rahaman.vercel.app/",
+      features: [
+        "User authentication & authorization",
+        "Payment integration with Stripe and 3 different way",
+        "Admin dashboard for product management",
+        "Shopping cart & order tracking",
+        "Responsive design for all devices"
+      ]
+    },
+    {
+      id: 5,
+      title: "E-Commerce Platform",
+      description: "Full-stack e-commerce solution with user authentication, payment processing, and admin dashboard built by Azizur Rahaman",
+      tags_list: ["React", "Node.js", "MongoDB", "Stripe", "JWT", "Express"],
+      category: "backend",
+      image: "/backend.png",
+      // live_demo: "https://github.com/AzizurRahamanGithub/ecommerce-platform",
+      github_link: "https://github.com/AzizurRahamanGithub/Ecommerce-Rest-API",
+      // live_demo: "https://azizur-rahaman.vercel.app/",
+      features: [
+        "User authentication & authorization",
+        "Payment integration with Stripe",
+        "Admin dashboard for product management",
+        "Shopping cart & order tracking",
+        "Responsive design for all devices"
+      ]
+    },
+    {
+      id: 6,
+      title: "Online Education and Chat",
+      description: "Scalable REST API with authentication, rate limiting, and comprehensive documentation by Azizur Rahaman",
+      tags_list: ["React", "DRF", "API", "Tailwind", "Responsive", "TypeScript"],
+      category: "backend",
+      image: "/backend.png",
+      link: "https://github.com/AzizurRahamanGithub/Employers-Management-System",
+      github_link: "https://github.com/AzizurRahamanGithub/Employers-Management-System",
+      // live_demo: "https://azizur-rahaman.vercel.app/",
+      features: [
+        "Real-time collaboration",
+        "Drag & drop interface",
+        "Team management system",
+        "Progress tracking & analytics",
+        "File attachments & comments"
+      ]
+    },
+    
+    // Frontend Projects
+    {
+      id: 7,
+      title: "Courier Management System",
+      description: "Modern Courier website's api by Azizur Rahaman",
+      tags_list: ["DRF", "Tailwind CSS", "TypeScript", "SEO"],
+      category: "backend",
+      image: "/backend.png",
+      link: "https://azizur-rahaman.vercel.app",
+      github_link: "https://github.com/AzizurRahamanGithub?tab=repositories",
+      // live_demo: "https://azizur-rahaman.vercel.app/",
+      features: [
+        "Smooth animations with Framer Motion",
+        "SEO optimized for search engines",
+        "Responsive design",
+        "Contact form integration",
+        "Project showcase gallery"
+      ]
+    },
+    
+    // Backend Projects
+    {
+      id: 8,
+      title: "Employee management System",
+      description: "Collaborative Employee management application with real-time updates and team features by Azizur Rahaman",
+      tags_list: ["Django", "DRF", "JWT", "DJ Templates", "PostgreSQL", "Docker"],
+      category: "backend",
+      image: "/backend.png",
+      link: "https://github.com/AzizurRahamanGithub/EduWorld_Next-level-Education",
+      github_link: "https://github.com/AzizurRahamanGithub/EduWorld_Next-level-Education",
+      features: [
+        "JWT authentication system",
+        "Rate limiting & security",
+        "Comprehensive API documentation",
+        "Docker containerization",
+        "MongoDB database integration"
+      ]
+    },
+    {
+      id: 9,
+      title: "Authentication Microservice",
+      description: "Microservice handling user authentication with OAuth2 and social login by Azizur Rahaman",
+      tags_list: ["Python", "DRF", "OAuth2", "PostgreSQL", "Docker", "JWT"],
+      category: "backend",
+      image: "/backend.png",
+      link: "https://github.com/AzizurRahamanGithub",
+      github_link: "https://github.com/AzizurRahamanGithub",
+      features: [
+        "OAuth2 & social login integration",
+        "Multi-factor authentication",
+        "Session management",
+        "Secure password hashing",
+        "Microservice architecture"
+      ]
+    },
+    {
+      id: 10,
+      title: "Real-time Chat Server",
+      description: "WebSocket server for real-time messaging with room management by Azizur Rahaman",
+      tags_list: ["Socket.io", "Django", "Redis", "JWT", "WebSockets", "Express"],
+      category: "backend",
+      image: "/backend.png",
+      link: "https://github.com/AzizurRahamanGithub/Django-Real-Time-ChatRoom",
+      github_link: "https://github.com/AzizurRahamanGithub/Django-Real-Time-ChatRoom",
+      features: [
+        "Real-time messaging with WebSockets",
+        "Room-based chat system",
+        "Message persistence",
+        "User presence indicators",
+        "File sharing capability"
+      ]
+    }
+  ]
+
+  const filtered = activeCategory === "all" ? projects : projects.filter((p) => p.category === activeCategory)
+  const visibleProjects = filtered.slice(0, visibleCount)
+  const hasMore = filtered.length > visibleCount
+
+  const handleCategoryChange = (category: Category) => {
+    setActiveCategory(category)
+    setVisibleCount(6)
+    setExpandedProject(null)
+  }
+
+  const handleViewMore = () => {
+    setVisibleCount(prev => prev + 3)
+  }
+
+  const toggleProjectExpand = (projectId: number) => {
+    setExpandedProject(prev => prev === projectId ? null : projectId)
+  }
+
+  return (
+    <>
+      {/* SEO Optimized Head */}
+      <Head>
+        <title>Projects by Azizur Rahaman - Full Stack Developer</title>
+        <meta name="description" content="Explore the full stack, frontend, and backend projects by Azizur Rahaman. Learn about my work and see the technologies used." />
+        <meta property="og:title" content="Projects by Azizur Rahaman - Full Stack Developer" />
+        <meta property="og:description" content="Explore the full stack, frontend, and backend projects by Azizur Rahaman. Learn about my work and see the technologies used." />
+        <meta property="og:image" content="/assets/projects-image.jpg" />
+        <meta property="og:url" content="https://azizur-rahaman.vercel.app/projects" />
+        <meta name="twitter:title" content="Projects by Azizur Rahaman - Full Stack Developer" />
+        <meta name="twitter:description" content="Explore the full stack, frontend, and backend projects by Azizur Rahaman." />
+        <meta name="twitter:image" content="/assets/projects-image.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
+      </Head>
+
+      <section id="projects" className="py-20 md:py-32 px-4 md:px-8 bg-transparent">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">
+              Projects by Azizur Rahaman
+            </h1>
+            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+              Full Stack Developer & Problem Solver - Building modern web applications with cutting-edge technologies
+            </p>
+          </motion.div>
+
+          {/* Category Filters */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            viewport={{ once: true }}
+            className="flex gap-3 mb-12 flex-wrap justify-center"
+          >
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => handleCategoryChange(cat)}
+                className={`px-6 py-3 rounded-xl transition-all duration-300 capitalize font-medium text-sm border ${
+                  activeCategory === cat 
+                    ? "bg-blue-500 hover:bg-blue-600 text-white transparent shadow-lg shadow-blue-600/25" 
+                    : "bg-blue-800/10 text-blue-400 border-white/20 hover:bg-blue-500/20 hover:border-blue-800/80"
+                }`}
+              >
+                {cat === "full-stack" ? "Full Stack" : cat}
+              </button>
+            ))}
+          </motion.div>
+
+          {/* Projects Grid */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <AnimatePresence>
+              {visibleProjects.map((project, index) => (
+                <motion.div
+                  key={project.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  className="group"
+                >
+                  <div className="bg-white/5 backdrop-blur-sm rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-500 border border-white/10 hover:border-blue-500/30 h-auto flex flex-col">
+                    
+                    {/* Project Image */}
+                    <div className="aspect-video overflow-hidden bg-gradient-to-br from-blue-500/10  to-purple-500/10 relative">
+                      <Image
+                        src={project.image || "/placeholder.svg"}
+                        alt={`${project.title} - Project by Azizur Rahaman`}
+                        width={400}
+                        height={300}
+                        layout="responsive"
+                        objectFit="cover"
+                        className="group-hover:scale-110 transition duration-700"
+                        loading="lazy"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    </div>
+
+                    {/* Project Content */}
+                    <div className="p-6 flex flex-col" style={{ minHeight: 'min-content' }}>
+                      <div className="flex-grow-0">
+                        <h2 className="text-xl font-bold text-white mb-3 group-hover:text-blue-400 transition-colors duration-300">
+                          {project.title}
+                        </h2>
+                        
+                        <p className="text-gray-300 mb-4 leading-relaxed text-sm">
+                          {project.description}
+                        </p>
+
+                        {/* Technologies */}
+                        <div className="flex flex-wrap gap-2 mb-4">
+                          {project.tags_list?.map((tag) => (
+                            <Badge
+                              key={tag}
+                              variant="outline"
+                              className="bg-blue-500/20 text-blue-300 border-blue-500/30 hover:bg-blue-500/20 transition"
+                            >
+                              {tag}
+                            </Badge>
+                          ))}
+                        </div>
+
+                        {/* Expanded Features */}
+                        <AnimatePresence>
+                          {expandedProject === project.id && project.features && (
+                            <motion.div
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: "auto" }}
+                              exit={{ opacity: 0, height: 0 }}
+                              transition={{ duration: 0.3 }}
+                              className="overflow-hidden"
+                            >
+                              <h4 className="text-sm font-semibold text-white mb-3">Key Features:</h4>
+                              <ul className="space-y-2">
+                                {project.features.map((feature, idx) => (
+                                  <motion.li
+                                    key={idx}
+                                    initial={{ opacity: 0, x: -10 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ duration: 0.3, delay: idx * 0.1 }}
+                                    className="flex items-start gap-2 text-sm text-gray-300"
+                                  >
+                                    <span className="w-1.5 h-1.5 rounded-full bg-green-400 mt-1.5 flex-shrink-0" />
+                                    <span>{feature}</span>
+                                  </motion.li>
+                                ))}
+                              </ul>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div className="flex flex-col sm:flex-row gap-2 pt-4 border-t border-white/10 mt-auto">
+                        <button
+                          onClick={() => toggleProjectExpand(project.id)}
+                          className="flex-1 px-4 py-2 rounded-lg bg-blue-500/20 border border-blue-400/50 text-blue-300 hover:bg-blue-500/30 transition-colors text-sm font-medium flex items-center justify-center gap-2"
+                        >
+                          {expandedProject === project.id ? 'Show Less' : 'See More'}
+                          <motion.svg
+                            animate={{ rotate: expandedProject === project.id ? 180 : 0 }}
+                            transition={{ duration: 0.3 }}
+                            className="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </motion.svg>
+                        </button>
+                        
+                        <div className="flex gap-2">
+                          {project.github_link && (
+                            <Link target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex-1 px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-center"
+                                aria-label={`View ${project.title} on GitHub`} href={project.github_link} passHref>
+                              
+                          
+                                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                  <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                                </svg>
+                            </Link>
+                          )}
+                          
+                          {project.live_demo && (
+                            <Link target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex-1 px-3 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white transparent transition-colors text-sm font-bold flex items-center justify-center gap-1" href={project.live_demo} passHref>
+                              
+                                <span>Live</span>
+                            </Link>
+                          )}
+                          {project.video_link && (
+                            <Link target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex-1 px-3 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white transparent transition-colors text-sm font-bold flex items-center justify-center gap-1" href={project.video_link} passHref>
+                              
+                                <span>Video</span>
+                            </Link>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+
+          {/* Load More Button */}
+          {hasMore && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true }}
+              className="mt-12 text-center"
+            >
+              <button
+                onClick={handleViewMore}
+                className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-blue-500 hover:bg-blue-600 text-white transition-all duration-300 font-medium shadow-lg shadow-blue-600/25 hover:shadow-xl hover:shadow-blue-600/35"
+              >
+                View More Projects
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+            </motion.div>
+          )}
+
+          {filtered.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-gray-400">No projects found in this category.</p>
+            </div>
+          )}
+        </div>
+      </section>
+    </>
+  )
+}
