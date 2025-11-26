@@ -131,7 +131,7 @@ export function About() {
               <div className="flex sm:flex-col gap-5 *:text-center">
                 <Link 
                     className="inline-block px-6 py-2 rounded-lg bg-blue-500/20 border border-blue-400/50 text-blue-300 hover:bg-blue-500/30 transition text-nowrap"
-                  href="https://drive.google.com/file/d/1o4Qr7sZq98I_m5Y1r-r91QZj4WhUosfE/view?usp=sharing"
+                  href="https://drive.google.com/file/d/138mlAn7zcw9pVPOFvQ7JlEzFqoxip2ZU/view?usp=sharing"
                   target="_blank"
                   passHref
                 >
