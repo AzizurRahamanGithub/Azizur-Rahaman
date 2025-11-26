@@ -31,9 +31,9 @@ export function SiteHeader() {
           <Link href="#courses" className="text-sm text-gray-300 hover:text-white transition">
             Courses
           </Link>
-          <Link href="#agency" className="text-sm text-gray-300 hover:text-white transition">
+          {/* <Link href="#agency" className="text-sm text-gray-300 hover:text-white transition">
             My Agency
-          </Link>
+          </Link> */}
           <Link href="#contact" className="text-sm text-gray-300 hover:text-white transition">
             Contact
           </Link>
