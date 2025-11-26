@@ -81,7 +81,59 @@ export function EducationExperience() {
     )
   }
 
-const fallbackEducation: EducationItem[] = [ { id: 1, degree: "Diploma in Computer Science", institution: "Mymensingh Polytechnic Institute", location: "Mymensingh", start_date: "2021-01-01", end_date: "2025-12-31", description: "", achievements_list: [ "CGPA: 3.8 / 4.0", "Active in programming clubs", "Project-based learning" ], is_current: true, }, { id: 2, degree: "CSE Fundamentals Certificate", institution: "Phitron.io", location: "Online", start_date: "2023-01-01", end_date: "2023-12-31", description: "", achievements_list: [ "CGPA: 4.0 / 4.0", "Problem Solving", "OOP Concepts" ], is_current: false, } ] 
+const fallbackEducation: EducationItem[] = [
+  { 
+    id: 1, 
+    degree: "Computer Science and Engineering", 
+    institution: "University of Scholars", 
+    location: "Dhaka, Banani", 
+    start_date: "2023-01-01", 
+    end_date: "2027-12-31", 
+    description: "Comprehensive computer science curriculum with focus on software engineering, algorithms, and modern web technologies. Building strong foundation in programming and system design.",
+    achievements_list: [ 
+      "CGPA: 3.7 / 4.0", 
+      "Active member of Programming Club and Tech Community",
+      "Participated in inter-university coding competitions",
+      "Organized tech workshops and seminars",
+      "Project-based learning approach with real-world applications",
+      "Strong fundamentals in Data Structures and Algorithms"
+    ], 
+    is_current: true, 
+  },
+  { 
+    id: 2, 
+    degree: "Full Stack Fundamentals", 
+    institution: "Udemy", 
+    location: "Online", 
+    start_date: "2023-01-01", 
+    end_date: "2023-12-31", 
+    description: "Intensive programming course focusing on full stack Python, Django, Tailwind, React js, Typescript",
+    achievements_list: [ 
+      "Object-Oriented Python Programming Concepts",
+      "Data Structures and Algorithm implementation",
+      "Completed multiple real-world projects"
+    ], 
+    is_current: false, 
+  },
+  { 
+    id: 3, 
+    degree: "Higher Secondary Certificate (HSC)", 
+    institution: "Rajdhani Ideal Scl & Clg", 
+    location: "Dhaka", 
+    start_date: "2019-01-01", 
+    end_date: "2021-12-31", 
+    description: "Completed Science stream with focus on Physics, Chemistry, and Mathematics. Developed strong analytical and logical thinking abilities.",
+    achievements_list: [ 
+      "GPA: 4.58 / 5.00 (Excellent Result)", 
+      "Science Club Active Member",
+      "Participated in Science Fairs and Olympiads",
+      "Mathematics Problem Solving Competitions",
+      "Developed strong foundation in logical reasoning",
+      "Active in extracurricular activities and community service"
+    ], 
+    is_current: false, 
+  }
+]
 
 const fallbackExperience: Experience[] = [ { 
   

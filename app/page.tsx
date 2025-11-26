@@ -46,10 +46,11 @@ export default function Page() {
         <Education /> */}
         <EducationExperience/>
         <Achievements />
-        <Blog />
+       
         <Courses />
-        <Agency />
+        {/* <Agency /> */}
         <Contact />
+         <Blog />
         <AppverseFooter />
       </main>
 
