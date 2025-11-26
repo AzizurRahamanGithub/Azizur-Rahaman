@@ -57,7 +57,7 @@ export function About() {
         <meta property="og:title" content={about?.title} />
         <meta property="og:description" content={`Learn more about Azizur Rahaman, a passionate Full Stack Developer. Discover his achievements, projects, and experience.`} />
         <meta property="og:image" content={about?.profile_photo || "/placeholder-image.jpg"} />
-        <meta property="og:url" content="https://yourwebsite.com/about" />
+        <meta property="og:url" content="https://azizur-rahaman.vercel.app/" />
         <meta name="twitter:title" content={about?.title} />
         <meta name="twitter:description" content={`Learn more about Azizur Rahaman, a passionate Full Stack Developer.`} />
         <meta name="twitter:image" content={about?.profile_photo || "/placeholder-image.jpg"} />
@@ -74,7 +74,7 @@ export function About() {
               jobTitle: "Full Stack Developer",
               image: about?.profile_photo || "/placeholder-image.jpg",
               description: `Azizur Rahaman is a Full Stack Developer with over 3 years of experience, founder of Softimize, and passionate about building innovative web applications.`,
-              url: "https://yourwebsite.com/about",
+              url: "https://azizur-rahaman.vercel.app/#about",
               sameAs: [
                 "https://www.linkedin.com/in/programmer-azizur-rahaman",
                 "https://github.com/AzizurRahamanGithub",

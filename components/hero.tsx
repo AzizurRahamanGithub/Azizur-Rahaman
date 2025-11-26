@@ -50,8 +50,8 @@ export function Hero() {
         <meta name="description" content={data?.subtitle} />
         <meta property="og:title" content={data?.title} />
         <meta property="og:description" content={data?.subtitle} />
-        <meta property="og:image" content="/path-to-your-image.jpg" />
-        <meta property="og:url" content="https://yourwebsite.com" />
+        <meta property="og:image" content="/placeholder-image.jpg" />
+        <meta property="og:url" content="https://azizur-rahaman.vercel.app" />
         <meta name="twitter:title" content={data?.title} />
         <meta name="twitter:description" content={data?.subtitle} />
         <meta name="twitter:image" content="/path-to-your-image.jpg" />
